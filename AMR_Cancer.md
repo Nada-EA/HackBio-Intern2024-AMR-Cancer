@@ -6,6 +6,10 @@ Github Repo: https://github.com/Nada-aca/AMR-in-Cancer-Drug-Resistance.git
 
 Antimicrobial resistance (AMR) has posed a significant public health crisis for decades. By 2050, the global mortality rate associated with AMR is projected to reach millions, potentially making it one of the top causes of death. When combined with another major health crisis and a top cause of death, such as cancer, the situation becomes even more dire \[1\]. (Figure 1\)
 
+
+![Figure1](https://github.com/user-attachments/assets/9a2f6df9-b379-4414-a8b3-a5952deb8e0f)
+
+
 **Risk factors for infections in cancer patients**
 
 Cancer patients usually receive chemotherapy as part of their treatment plan. This weakens their immunity, making them more prone to infections. Other factors associated with increased infection rates in cancer patients include the dosage and duration of chemotherapy \[2\], surgeries \[3\], treatment-related neutropenia, and stem cell transplantation \[1\]. Furthermore, infections in cancer patients are more fatal, with mortality rates that are almost three times higher than the population \[4\].
@@ -13,6 +17,10 @@ Cancer patients usually receive chemotherapy as part of their treatment plan. Th
 **Resistant infections in cancer patients**
 
 As cancer patients are susceptible to various infections, they are usually exposed to prolonged antibiotic regimens, which contributes to AMR development. AMR adds to the burden posed by infections on cancer patients. In the USA, more than a quarter of pathogens that cause post-chemotherapy infections are drug-resistant \[5\]. Additionally, high rates of resistance were found in ESKAPE pathogens that were isolated from bloodstream infections in cancer patients in the USA. (Figure 2\) These are a group of six pathogens that are commonly found in hospitals and are usually antibiotic-resistant: *Enterococcus faecium*, *Staphylococcus aureus*, *Klebsiella pneumoniae*, *Acinetobacter baumannii*, *Pseudomonas aeruginosa*, and *Enterobacter* *spp* \[1\]. 
+
+
+![Figure2](https://github.com/user-attachments/assets/ee5dc9ae-3ef0-46d2-addb-5f61621e63c9)
+
 
 **Strategies to Combat AMR in Cancer Care**
 
