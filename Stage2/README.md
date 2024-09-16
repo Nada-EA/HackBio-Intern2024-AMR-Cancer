@@ -10,6 +10,7 @@ This repository contains the analysis and visualization of the Antimicrobial Res
 - **preprocessingR.R**: R script for data cleaning and preprocessing (used initially).
 - **visualization.py**: Python script for data visualization.
 - **Stage2_Task_AMR.md**: Comprehensive report detailing the analysis.
+- **Infographic_AMR.png**: An infographic presentation of the key results for the public audience.
 
 ## Steps in the Analysis
 
