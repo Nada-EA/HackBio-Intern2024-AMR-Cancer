@@ -87,5 +87,5 @@ colSums(is.na(joined_cholera))
 
 #Check which cells are NA
 subset(joined_cholera, is.na(joined_cholera$Number_deaths)) 
-subset(joined_cholera, is.na(joined_cholera$Case_fatality))
+subset(joined_cholera, is.na(joined_cholera$Case_fatality)) #Some of the missing fatality entries are for outbreaks with large number of cases (so we need to be cautious when interpreting the results!) 
 ```
