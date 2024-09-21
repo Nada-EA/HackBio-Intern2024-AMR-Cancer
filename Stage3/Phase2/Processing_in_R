@@ -1,0 +1,91 @@
+---
+title: "R Notebook"
+output:
+  html_notebook: default
+  pdf_document: default
+---
+#Load libraries
+```{r}
+library(tidyverse)
+library(tidyr)
+library(readr)
+library(ggplot2)
+```
+#Load data
+```{r}
+cases <- read.csv('Cases_Cholera.csv')
+deaths <- read.csv('Fatality_Cholera.csv')
+fatality <- read.csv('Case-Fatality_Cholera.csv')
+```
+#Review data (structure, summary, NA
+```{r}
+#Data structure
+str(cases)
+str(deaths) #number of deaths needs to be changed from character to numeric
+str(fatality) #case-fatality rate needs to be changed from character to numeric
+#Data summary
+summary(cases)
+summary(deaths)
+summary(fatality) #The three datasets (1949-2016)
+                  #There is discrepancy in the number of entries (check for NA & empty cells)
+#Check for unique values
+unique_cases <- lapply(cases, unique) #161 countries, 68 years (1949-2016)
+unique_deaths <- lapply(deaths, unique) #161 countries, 68 years (1949-2016)
+unique_fatality <- lapply(fatality, unique) #160 countries (one missing), 68 years (1949-2016)
+#Check for NA/missing values
+sum(is.na(cases)) #None in cases
+sum(is.na(deaths)) #2 NA in deaths
+sum(is.na(fatality)) #None in fatality
+```
+#Data processing
+```{r}
+#Change column names (very long names)
+cases <- cases %>%
+  rename(Country = Countries..territories.and.areas, Number_cases =
+           Number.of.reported.cases.of.cholera)
+
+deaths <- deaths %>%
+  rename(Country = Countries..territories.and.areas, Number_deaths =
+           Number.of.reported.deaths.from.cholera)
+
+fatality <- fatality %>%
+  rename(Country = Countries..territories.and.areas, Case_fatality =
+           Cholera.case.fatality.rate)
+
+#Change no. of deaths & fatality rates to numeric
+deaths$Number_deaths <- as.numeric(deaths$Number_deaths)
+fatality$Case_fatality <- as.numeric(fatality$Case_fatality)
+
+#Warning NAs introduced, so check for them
+colSums(is.na(deaths)) #2 NAs in Number of deaths column
+colSums(is.na(fatality)) #2 NAs in case-fatality column
+
+#Check which cells are NA
+subset(deaths, is.na(deaths$Number_deaths)) #Germany2016 & Iraq2016
+subset(fatality, is.na(fatality$Case_fatality)) #Germany2016 & Iraq2016
+#Check cases for these two countries in 2016 and deaths in other years
+subset(cases, Country == 'Germany' | Country == 'Iraq')
+subset(deaths, Country == 'Germany' | Country == 'Iraq') #Only one case in Germany2016 & v.low fatalities in other years... #No record for cases in Iraq2016 (convert NAs to 0)
+
+#Replace NA in deaths and fatalities by "0"
+deaths$Number_deaths[is.na(deaths$Number_deaths)] <- 0
+fatality$Case_fatality[is.na(fatality$Case_fatality)] <- 0
+
+#Recheck
+sum(is.na(cases))
+sum(is.na(deaths)) 
+sum(is.na(fatality)) #Now, none is NA
+```
+#Merge the 3 files into one dataset
+```{r}
+joined_cholera <- cases %>%
+  left_join(deaths, by = c("Country" = "Country", "Year" = "Year")) %>%
+  left_join(fatality, by = c("Country" = "Country", "Year" = "Year"))
+
+#Check for NAs after Join:
+colSums(is.na(joined_cholera))
+
+#Check which cells are NA
+subset(joined_cholera, is.na(joined_cholera$Number_deaths)) 
+subset(joined_cholera, is.na(joined_cholera$Case_fatality))
+```
