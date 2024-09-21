@@ -96,15 +96,51 @@ colSums(is.na(joined_cholera)) #Now, no NAs
 ```
 #Data analysis for trends
 ```{r}
-#Yearly summary (total cases over time)
+#Total cases by year
 yearly_summary <- joined_cholera %>%
   group_by(Year) %>% summarise(
     Total_Cases = sum(Number_cases, na.rm = TRUE),
     Total_Deaths = sum(Number_deaths, na.rm = TRUE),
-    Avg_Fatality_Rate = mean(Case_fatality, na.rm = TRUE)
-  )
+    Avg_Fatality_Rate = mean(Case_fatality, na.rm = TRUE))
+
 #Visualize yearly summary
+##Total cases over years
 ggplot(yearly_summary, aes(x = Year, y = Total_Cases)) +
   geom_line(color = "blue") +
   labs(title = "Cholera Cases Over Time (1949-2016)", x = "Year", y = "Total Cases")
+##Total deaths over years
+ggplot(yearly_summary, aes(x = Year, y = Total_Deaths)) +
+  geom_line(color = "red") +
+  labs(title = "Cholera fatalities Over Time (1949-2016)", x = "Year", y = "Total Fatalities")
+##Total Case-Fatality over years
+ggplot(yearly_summary, aes(x = Year, y = Avg_Fatality_Rate)) +
+  geom_line(color = "purple") +
+  labs(title = "Average Case-Fatality Over years (1949-2016)", x = "Year", y = "Average Case-Fatality Rate")
+
+#Total cases by country
+country_summary <- joined_cholera %>%
+  group_by(Country) %>% summarize(
+    Total_Cases = sum(Number_cases, na.rm = T),
+    Total_Deaths = sum(Number_deaths, na.rm = T),
+    Avg_Fatality_Rate = mean(Case_fatality, na.rm = T)) %>%
+  arrange(desc(Total_Cases))
+
+# Bar plot of total cases for top 20 countryies
+ggplot(country_summary, aes(x = reorder(Country, -Total_Cases), y = Total_Cases)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Total Cholera Cases by Country", x = "Country", y = "Total Cases")
+#So many countries, the graph is crowded, so only plot the top 20
+## Filter top 20 countries by total cases
+top_20_countries <- country_summary %>%
+  top_n(20, Total_Cases) %>%      # Get the top 20 countries
+  arrange(desc(Total_Cases))      # Arrange by total cases in descending order
+
+## Plot the data of the top 20
+ggplot(top_20_countries, aes(x = reorder(Country, -Total_Cases), y = Total_Cases)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +                   # Flip coordinates for better readability
+  labs(title = "Top 20 Countries by Cholera Cases",
+       x = "Country", y = "Total Cases") +
+  theme_minimal()
 ```
