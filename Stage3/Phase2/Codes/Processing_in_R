@@ -142,5 +142,6 @@ ggplot(top_20_countries, aes(x = reorder(Country, -Total_Cases), y = Total_Cases
   coord_flip() +                   # Flip coordinates for better readability
   labs(title = "Top 20 Countries by Cholera Cases",
        x = "Country", y = "Total Cases") +
+  scale_y_continuous(labels = scales::label_number(big.mark = ",")) +  #This to show full numbers instead of scientific notation like "5e+05"
   theme_minimal()
 ```
