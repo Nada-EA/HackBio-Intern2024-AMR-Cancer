@@ -71,7 +71,7 @@ subset(deaths, Country == 'Germany' | Country == 'Iraq') #Only one case in Germa
 deaths$Number_deaths[is.na(deaths$Number_deaths)] <- 0
 fatality$Case_fatality[is.na(fatality$Case_fatality)] <- 0
 
-#Recheck
+#Recheck for NAs
 sum(is.na(cases))
 sum(is.na(deaths)) 
 sum(is.na(fatality)) #Now, none is NA
@@ -82,10 +82,15 @@ joined_cholera <- cases %>%
   left_join(deaths, by = c("Country" = "Country", "Year" = "Year")) %>%
   left_join(fatality, by = c("Country" = "Country", "Year" = "Year"))
 
-#Check for NAs after Join:
+#Check for NAs after Join
 colSums(is.na(joined_cholera))
 
 #Check which cells are NA
 subset(joined_cholera, is.na(joined_cholera$Number_deaths)) 
-subset(joined_cholera, is.na(joined_cholera$Case_fatality)) #Some of the missing fatality entries are for outbreaks with large number of cases (so we need to be cautious when interpreting the results!) 
+subset(joined_cholera, is.na(joined_cholera$Case_fatality)) #Some of the missing fatality entries are for outbreaks with large number of cases (so we need to be cautious when interpreting the results!)
+#Converting NAs to Zero
+joined_cholera$Number_deaths[is.na(joined_cholera$Number_deaths)] <- 0
+joined_cholera$Case_fatality[is.na(joined_cholera$Case_fatality)] <- 0
+#ReCheck for NAs
+colSums(is.na(joined_cholera)) #Now, no NAs
 ```
