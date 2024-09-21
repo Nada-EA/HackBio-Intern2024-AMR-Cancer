@@ -94,3 +94,17 @@ joined_cholera$Case_fatality[is.na(joined_cholera$Case_fatality)] <- 0
 #ReCheck for NAs
 colSums(is.na(joined_cholera)) #Now, no NAs
 ```
+#Data analysis for trends
+```{r}
+#Yearly summary (total cases over time)
+yearly_summary <- joined_cholera %>%
+  group_by(Year) %>% summarise(
+    Total_Cases = sum(Number_cases, na.rm = TRUE),
+    Total_Deaths = sum(Number_deaths, na.rm = TRUE),
+    Avg_Fatality_Rate = mean(Case_fatality, na.rm = TRUE)
+  )
+#Visualize yearly summary
+ggplot(yearly_summary, aes(x = Year, y = Total_Cases)) +
+  geom_line(color = "blue") +
+  labs(title = "Cholera Cases Over Time (1949-2016)", x = "Year", y = "Total Cases")
+```
