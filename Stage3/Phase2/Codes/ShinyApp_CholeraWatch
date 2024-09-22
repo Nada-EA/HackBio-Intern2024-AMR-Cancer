@@ -3,6 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 
+
 # UI
 ui <- fluidPage(
   tags$head(
@@ -71,6 +72,9 @@ server <- function(input, output) {
                              "Case_fatality" = "Case-Fatality Rate (%)"))
     
     # Plot with faceting
+    long_data$Metric <- factor(long_data$Metric, 
+                               levels = c("Total Cases", "Total Fatalities", "Case-Fatality Rate (%)"))
+    
     ggplot(long_data, aes(x = Year, y = Value, group = Metric, color = Metric)) +
       geom_line(size = 1) +
       geom_point(size = 2) +
@@ -91,8 +95,8 @@ server <- function(input, output) {
                                     "Total Fatalities" = "darkorange", 
                                     "Case-Fatality Rate (%)" = "darkgreen")) +
       scale_x_continuous(breaks = scales::pretty_breaks(n = 10), 
-                         labels = scales::number_format(accuracy = 1)) +  # No decimal points for years
-      scale_y_continuous(sec.axis = sec_axis(~ . / 100, name = "Case-Fatality Rate (%)"))
+                         labels = scales::number_format(accuracy = 1))   # No decimal points for years
+  
   })
 }
 
