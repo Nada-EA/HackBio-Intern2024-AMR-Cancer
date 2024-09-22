@@ -1,53 +1,98 @@
 library(shiny)
 library(ggplot2)
 library(dplyr)
+library(tidyr)
 
 # UI
 ui <- fluidPage(
-  tags$style(HTML("
-    body { background-color: #f5f5f5; }
-    h2 { color: steelblue; }
-    .well { background-color: white; border: 1px solid #ddd; }
-  ")),
+  tags$head(
+    tags$style(HTML("
+      body {
+        font-family: Georgia, serif;
+        background-color: #f0f4f8; 
+      }
+      h1, h2, h3 {
+        font-weight: bold;
+        color: #2c3e50;  
+      }
+    "))
+  ),
+  
+  # Title with logo
   titlePanel(
-    div(img(src = "logo.png", height = 100),"CholeraWatch")
-    ),
+    div(
+      img(src = "logo.png", height = 100),
+      HTML("<b>CholeraWatch</b>")
+    )
+  ),
   
   sidebarLayout(
     sidebarPanel(
       selectInput("country", "Select Country:", choices = unique(joined_cholera$Country)),
       sliderInput("yearRange", "Select Year Range:", 
-                  min = min(joined_cholera$Year), max = max(joined_cholera$Year), 
-                  value = c(min(joined_cholera$Year), max = max(joined_cholera$Year)))
+                  min = min(joined_cholera$Year), 
+                  max = max(joined_cholera$Year), 
+                  value = c(min(joined_cholera$Year), max(joined_cholera$Year)),
+                  step = 1,
+                  sep = "")  # To remove the comma separator from the years
     ),
+    
     mainPanel(
       plotOutput("choleraPlot")
     )
   )
 )
 
+
 # Server
 server <- function(input, output) {
   
+  # Filtered dataset based on input
   filtered_data <- reactive({
     joined_cholera %>%
       filter(Country == input$country, Year >= input$yearRange[1], Year <= input$yearRange[2])
   })
   
+  # Reshape the dataset for faceting
   output$choleraPlot <- renderPlot({
     data <- filtered_data()
     
     validate(
       need(nrow(data) > 0, "No data available for this selection")
     )
-    ggplot(data, aes(x = Year)) +
-      geom_line(aes(y = Number_cases, color = "Cases")) +
-      geom_line(aes(y = Number_deaths, color = "Fatalities")) +
-      geom_line(aes(y = Case_fatality * 100, color = "Case-Fatality Rate (%)")) +  # Multiply by 100 to get percentage scale
-      labs(title = "Cholera Cases, Fatalities, and Case-Fatality Rate per Year", x = "Year", y = "Value") +
-      scale_x_continuous(breaks = scales::pretty_breaks(), labels = scales::number_format(accuracy = 1)) +
-      scale_color_manual(values = c("Cases" = "steelblue", "Fatalities" = "darkred", "Case-Fatality Rate (%)" = "darkmagenta")) +
-      theme_minimal()
+    
+    # Prepare the data for faceting
+    long_data <- data %>%
+      pivot_longer(cols = c(Number_cases, Number_deaths, Case_fatality), 
+                   names_to = "Metric", values_to = "Value") %>%
+      mutate(Metric = recode(Metric,
+                             "Number_cases" = "Total Cases",
+                             "Number_deaths" = "Total Fatalities",
+                             "Case_fatality" = "Case-Fatality Rate (%)"))
+    
+    # Plot with faceting
+    ggplot(long_data, aes(x = Year, y = Value, group = Metric, color = Metric)) +
+      geom_line(size = 1) +
+      geom_point(size = 2) +
+      facet_grid(Metric ~ ., scales = "free_y", switch = "y") +  # Facet for each metric
+      labs(title = paste("Trends in Cholera Cases, Fatalities, and Case-Fatality Rate in", input$country),
+           x = "Year", y = "Count / Percentage") +
+      theme_minimal() +
+      theme(
+        plot.title = element_text(face = "bold", hjust = 0.5),   # Bold title, center-aligned
+        strip.text = element_text(face = "bold"),                # Bold facet labels
+        axis.title.x = element_text(face = "bold"),              # Bold x-axis label
+        axis.title.y = element_text(face = "bold"),              # Bold y-axis label
+        legend.position = "none",                                # Remove legend
+        strip.background = element_rect(fill = "gray90"),        # Background for facet labels
+        panel.spacing = unit(1, "lines")                         # Increase space between panels
+      ) +
+      scale_color_manual(values = c("Total Cases" = "darkblue", 
+                                    "Total Fatalities" = "darkorange", 
+                                    "Case-Fatality Rate (%)" = "darkgreen")) +
+      scale_x_continuous(breaks = scales::pretty_breaks(n = 10), 
+                         labels = scales::number_format(accuracy = 1)) +  # No decimal points for years
+      scale_y_continuous(sec.axis = sec_axis(~ . / 100, name = "Case-Fatality Rate (%)"))
   })
 }
 
