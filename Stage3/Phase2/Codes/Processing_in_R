@@ -197,3 +197,33 @@ ggplot(top_20_long, aes(x = reorder(Country, -Value), y = Value, fill = Metric))
   theme(legend.position = "top") +  
   scale_y_continuous(labels = scales::label_number(big.mark = ","))
 ```
+#Focus on one Country "Nigeria": significant outbreaks, no NAs, and data available over years (1970-2016)
+```{r}
+#Filter Congo data alone
+Nigeria <- joined_cholera %>%
+  filter(Country == "Nigeria")
+
+# Step 1: Reshape the data into a long format
+Nigeria_long <- Nigeria %>%
+  select(Year, Number_cases, Number_deaths, Case_fatality) %>%
+  pivot_longer(cols = c(Number_cases, Number_deaths, Case_fatality),
+               names_to = "Metric", values_to = "Value") %>%
+  mutate(Metric = recode(Metric,
+                         "Number_cases" = "Cases",
+                         "Number_deaths" = "Fatalities",
+                         "Case_fatality" = "Case-Fatality Rate"),
+## Reorder Metric levels so that Case-Fatality Rate appears last
+ Metric = factor(Metric, levels = c("Total Cases", "Total Fatalities", "Case-Fatality Rate")))
+
+# Step 2: Create a faceted plot
+ggplot(Nigeria_long, aes(x = Year, y = Value, color = Metric)) +
+  geom_line(size = 1) + geom_point(size = 2) +
+  facet_wrap(~ Metric, scales = "free_y", ncol = 1) +
+  labs(title = "Trends in Cholera Cases, Fatalities, and Case-Fatality Rate in Nigeria",
+       x = "Year", y = "Count / Percentage") +
+  
+  scale_color_manual(values = c("Total Cases" = "steelblue", 
+                                "Total Fatalities" = "darkred", 
+                                "Case-Fatality Rate" = "darkmagenta")) +
+  theme(legend.position = "none")  # Remove redundant legend
+```
