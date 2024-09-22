@@ -125,18 +125,17 @@ country_summary <- joined_cholera %>%
     Avg_Fatality_Rate = mean(Case_fatality, na.rm = T)) %>%
   arrange(desc(Total_Cases))
 
-# Bar plot of total cases for top 20 countryies
+#1- Bar plot of total cases for top 20 countryies
 ggplot(country_summary, aes(x = reorder(Country, -Total_Cases), y = Total_Cases)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   coord_flip() +
-  labs(title = "Total Cholera Cases by Country", x = "Country", y = "Total Cases")
-#So many countries, the graph is crowded, so only plot the top 20
-## Filter top 20 countries by total cases
+  labs(title = "Total Cholera Cases by Country", x = "Country", y = "Total Cases")  #So many countries, the graph is crowded, so only plot the top 20
+##Filter top 20 countries by total cases
 top_20_countries <- country_summary %>%
   top_n(20, Total_Cases) %>%      # Get the top 20 countries
   arrange(desc(Total_Cases))      # Arrange by total cases in descending order
 
-## Plot the data of the top 20
+##Plot the data of the top 20
 ggplot(top_20_countries, aes(x = reorder(Country, -Total_Cases), y = Total_Cases)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   coord_flip() +                   # Flip coordinates for better readability
@@ -144,4 +143,20 @@ ggplot(top_20_countries, aes(x = reorder(Country, -Total_Cases), y = Total_Cases
        x = "Country", y = "Total Cases") +
   scale_y_continuous(labels = scales::label_number(big.mark = ",")) +  #This to show full numbers instead of scientific notation like "5e+05"
   theme_minimal()
+
+#2- Plot a map to visualize outbreaks geographically
+##Merge our dataset data with the world map data
+world_map <- getMap(resolution = "low")
+
+##Match the country names from our dataset to the map's data
+map_data <- joinCountryData2Map(country_summary,
+                                   joinCode = "NAME",   #country names in world map
+                                   nameJoinColumn = "Country")  #country names in our data
+
+##Plot the map
+mapCountryData(map_data, 
+               nameColumnToPlot = "Total_Cases",   
+               mapTitle = "Cholera Outbreaks by Country",
+               colourPalette = "heat",               
+               catMethod = "pretty")
 ```
