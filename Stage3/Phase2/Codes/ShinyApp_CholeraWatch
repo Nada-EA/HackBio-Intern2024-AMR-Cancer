@@ -1,0 +1,55 @@
+library(shiny)
+library(ggplot2)
+library(dplyr)
+
+# UI
+ui <- fluidPage(
+  tags$style(HTML("
+    body { background-color: #f5f5f5; }
+    h2 { color: steelblue; }
+    .well { background-color: white; border: 1px solid #ddd; }
+  ")),
+  titlePanel(
+    div(img(src = "logo.png", height = 100),"CholeraWatch")
+    ),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("country", "Select Country:", choices = unique(joined_cholera$Country)),
+      sliderInput("yearRange", "Select Year Range:", 
+                  min = min(joined_cholera$Year), max = max(joined_cholera$Year), 
+                  value = c(min(joined_cholera$Year), max = max(joined_cholera$Year)))
+    ),
+    mainPanel(
+      plotOutput("choleraPlot")
+    )
+  )
+)
+
+# Server
+server <- function(input, output) {
+  
+  filtered_data <- reactive({
+    joined_cholera %>%
+      filter(Country == input$country, Year >= input$yearRange[1], Year <= input$yearRange[2])
+  })
+  
+  output$choleraPlot <- renderPlot({
+    data <- filtered_data()
+    
+    validate(
+      need(nrow(data) > 0, "No data available for this selection")
+    )
+    ggplot(data, aes(x = Year)) +
+      geom_line(aes(y = Number_cases, color = "Cases")) +
+      geom_line(aes(y = Number_deaths, color = "Fatalities")) +
+      geom_line(aes(y = Case_fatality * 100, color = "Case-Fatality Rate (%)")) +  # Multiply by 100 to get percentage scale
+      labs(title = "Cholera Cases, Fatalities, and Case-Fatality Rate per Year", x = "Year", y = "Value") +
+      scale_x_continuous(breaks = scales::pretty_breaks(), labels = scales::number_format(accuracy = 1)) +
+      scale_color_manual(values = c("Cases" = "steelblue", "Fatalities" = "darkred", "Case-Fatality Rate (%)" = "darkmagenta")) +
+      theme_minimal()
+  })
+}
+
+# Run the App
+shinyApp(ui = ui, server = server)
