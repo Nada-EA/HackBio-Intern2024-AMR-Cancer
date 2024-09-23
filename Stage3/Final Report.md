@@ -3,7 +3,9 @@
 **Authors (@slack):**   
 Lakshana Bakthavachalam **(@Lakshana),**  Nada ElSayed Ahmed **(@Nada\_EA)**
 
-**GitHub repo: [https://github.com/Nada-EA/HackBio2024-AMR/tree/main/Stage3](https://github.com/Nada-EA/HackBio2024-AMR/tree/main/Stage3)**
+**GitHub link to markdown  file: **
+
+**GitHub link to repository: [https://github.com/Nada-EA/HackBio2024-AMR/tree/main/Stage3](https://github.com/Nada-EA/HackBio2024-AMR/tree/main/Stage3)**
 
 **Phase I**
 
