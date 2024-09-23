@@ -7,6 +7,7 @@ output:
 #Install missing packages
 ```{r}
 install.packages("rworldmap")
+install.packages("shinyWidgets")
 ```
 
 #Load libraries
@@ -144,7 +145,7 @@ ggplot(country_summary, aes(x = reorder(Country, -Total_Cases), y = Total_Cases)
   labs(title = "Total Cholera Cases by Country", x = "Country", y = "Total Cases")
 #So many countries, the graph is crowded, so only plot the top 20
 
-## Filter top 20 countries by total cases
+##Filter top 20 countries by total cases
 top_20_countries <- country_summary %>%
   top_n(20, Total_Cases) %>%      # Get the top 20 countries
   arrange(desc(Total_Cases))      # Arrange by total cases in descending order
@@ -174,6 +175,7 @@ mapCountryData(map_data,
                colourPalette = "heat",               
                catMethod = "pretty")
 
+
 #3- Plot top 20 countries (cases, deaths, and fatalities)
 ##convert dataframe to long for plotting
 top_20_long <- top_20_countries %>%
@@ -199,7 +201,7 @@ ggplot(top_20_long, aes(x = reorder(Country, -Value), y = Value, fill = Metric))
 ```
 #Focus on one Country "Nigeria": significant outbreaks, no NAs, and data available over years (1970-2016)
 ```{r}
-#Filter Congo data alone
+#Filter Nigeria data alone
 Nigeria <- joined_cholera %>%
   filter(Country == "Nigeria")
 
@@ -213,7 +215,7 @@ Nigeria_long <- Nigeria %>%
                          "Number_deaths" = "Fatalities",
                          "Case_fatality" = "Case-Fatality Rate"),
 ## Reorder Metric levels so that Case-Fatality Rate appears last
- Metric = factor(Metric, levels = c("Total Cases", "Total Fatalities", "Case-Fatality Rate")))
+ Metric = factor(Metric, levels = c("Cases", "Fatalities", "Case-Fatality Rate")))
 
 # Step 2: Create a faceted plot
 ggplot(Nigeria_long, aes(x = Year, y = Value, color = Metric)) +
@@ -222,8 +224,8 @@ ggplot(Nigeria_long, aes(x = Year, y = Value, color = Metric)) +
   labs(title = "Trends in Cholera Cases, Fatalities, and Case-Fatality Rate in Nigeria",
        x = "Year", y = "Count / Percentage") +
   
-  scale_color_manual(values = c("Total Cases" = "steelblue", 
-                                "Total Fatalities" = "darkred", 
+  scale_color_manual(values = c("Cases" = "steelblue", 
+                                "Fatalities" = "darkred", 
                                 "Case-Fatality Rate" = "darkmagenta")) +
   theme(legend.position = "none")  # Remove redundant legend
 ```
