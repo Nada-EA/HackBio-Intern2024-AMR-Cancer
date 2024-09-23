@@ -2,7 +2,10 @@ library(shiny)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(shinydashboard)
 
+# Load data
+joined_cholera <- read.csv("joined_cholera")
 
 # UI
 ui <- fluidPage(
@@ -16,16 +19,14 @@ ui <- fluidPage(
         font-weight: bold;
         color: #2c3e50;  
       }
-    "))
-  ),
+    "))),
   
   # Title with logo
   titlePanel(
     div(
       img(src = "logo.png", height = 100),
       HTML("<b>CholeraWatch</b>")
-    )
-  ),
+    )),
   
   sidebarLayout(
     sidebarPanel(
@@ -35,14 +36,19 @@ ui <- fluidPage(
                   max = max(joined_cholera$Year), 
                   value = c(min(joined_cholera$Year), max(joined_cholera$Year)),
                   step = 1,
-                  sep = "")  # To remove the comma separator from the years
-    ),
+                  sep = "")),  # To remove the comma separator from the years
     
     mainPanel(
+      fluidRow(
+        column(4, infoBoxOutput("totalCasesBox")),
+        column(4, infoBoxOutput("totalDeathsBox")),
+        column(4, infoBoxOutput("cfrBox"))
+      ),
+      br(),  # Line break to add space between the info boxes and the plot
+      
+      div(class = "mainPanel-spacing",  # to increase space between info boxes and plot
       plotOutput("choleraPlot")
-    )
-  )
-)
+    ))))
 
 
 # Server
@@ -52,6 +58,40 @@ server <- function(input, output) {
   filtered_data <- reactive({
     joined_cholera %>%
       filter(Country == input$country, Year >= input$yearRange[1], Year <= input$yearRange[2])
+  })
+  # InfoBox for Total Cases
+  output$totalCasesBox <- renderInfoBox({
+    data <- filtered_data()
+    total_cases <- sum(data$Number_cases, na.rm = TRUE)
+    
+    infoBox(
+      "Total Cases", total_cases, icon = icon("bar-chart"),
+      color = "blue", fill = TRUE
+    )
+  })
+  
+  # InfoBox for Total Deaths
+  output$totalDeathsBox <- renderInfoBox({
+    data <- filtered_data()
+    total_deaths <- sum(data$Number_deaths, na.rm = TRUE)
+    
+    infoBox(
+      "Total Deaths", total_deaths, icon = icon("times-circle"),
+      color = "orange", fill = TRUE
+    )
+  })
+  
+  # InfoBox for Case-Fatality Rate
+  output$cfrBox <- renderInfoBox({
+    data <- filtered_data()
+    total_cases <- sum(data$Number_cases, na.rm = TRUE)
+    total_deaths <- sum(data$Number_deaths, na.rm = TRUE)
+    cfr <- ifelse(total_cases > 0, (total_deaths / total_cases) * 100, 0)
+    
+    infoBox(
+      "Case-Fatality Rate", paste0(round(cfr, 2), "%"), icon = icon("percent"),
+      color = "green", fill = TRUE
+    )
   })
   
   # Reshape the dataset for faceting
