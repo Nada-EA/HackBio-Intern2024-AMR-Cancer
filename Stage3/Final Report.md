@@ -74,7 +74,7 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 
 ## **\[Country name\] (Year range)**
 
-### **Key Metrics**
+### * **Key Metrics**
 
 ### **Total Cases:** \[Insert number\]
 
@@ -83,7 +83,7 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 ### **Average Case-Fatality Rate:** \[Insert percentage\]
 
 
-### **Summary:**
+### * **Summary:**
 
 1\. Number of Cases:
 
@@ -105,13 +105,13 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 * Lowest: \[CFR %\] (Year: \[Year\])
 
 
-### **Cholera Outbreak Graph:** \[Insert graph with cases, fatalities, & case-fatality rate\]
+### * **Cholera Outbreak Graph:** \[Insert graph with cases, fatalities, & case-fatality rate\]
 
 ---
 
 # **Example: Nigeria (1970 \- 2016\)**
 
-## **Key Metrics**
+## * **Key Metrics**
 
 ### **Total Cases:** 310217
 
@@ -119,7 +119,7 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 
 ### **Average Case-Fatality Rate:** 6.92%
 
-## **Summary:**
+## * **Summary:**
 
 1\. Number of Cases:
 
@@ -141,7 +141,7 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 * Lowest Case-fatality Rate in Nigeria: 0 in the year 1985
 
 
-## **Cholera Outbreak Graph:** 
+## * **Cholera Outbreak Graph:** 
 
 ![Nigeria](https://github.com/user-attachments/assets/4d27e545-081b-4769-a569-037283d8bafb)
 
