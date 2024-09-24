@@ -7,9 +7,13 @@ Lakshana Bakthavachalam **(@Lakshana),**  Nada ElSayed Ahmed **(@Nada\_EA)**
 
 **Link to GitHub repo: [https://github.com/Nada-EA/HackBio2024-AMR/tree/main/Stage3](https://github.com/Nada-EA/HackBio2024-AMR/tree/main/Stage3)**
 
+---
+
 * **Phase I**
 
 **Google Doc:** [https://docs.google.com/document/d/1V0sQZQAMyaK9svz\_VcVEsrdnY6KWJLA7qIHcCffQY0A/edit\#heading=h.6o1oyespi2s2](https://docs.google.com/document/d/1V0sQZQAMyaK9svz_VcVEsrdnY6KWJLA7qIHcCffQY0A/edit#heading=h.6o1oyespi2s2)
+
+---
 
 * **Phase II**
 
@@ -60,6 +64,8 @@ In 1949, approximately 0.2 million cases of cholera were reported worldwide. Thi
 
 From 1949 to 1960, the average case fatality rate was quite high. However, after 1960, it gradually declined and stabilized at under 10 (in number) throughout the following years. With reference to Fig3, the case number surged to 0.6 million in both 1991 and 2011, whereas the case-fatality rate during those years were low, reflecting advancements in medical development and public health interventions.
 
+---
+
 ### **Cholera Outbreak Report Template**
 
 ### **\[Country name\] (Year range)**
@@ -71,6 +77,7 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 ### **Total Fatalities:** \[Insert number\]
 
 ### **Average Case-Fatality Rate:** \[Insert percentage\]
+
 
 ### **Summary:**
 
@@ -93,7 +100,10 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 * Highest: \[CFR %\] (Year: \[Year\])  
 * Lowest: \[CFR %\] (Year: \[Year\])
 
+
 ### **Cholera Outbreak Graph:** \[Insert graph with cases, fatalities, & case-fatality rate\]
+
+---
 
 **Example: Nigeria (1970 \- 2016\)**
 
@@ -131,6 +141,7 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 
 ![Nigeria](https://github.com/user-attachments/assets/4d27e545-081b-4769-a569-037283d8bafb)
 
+---
 
 
 **Shiny App: CholeraWatch**
@@ -141,6 +152,8 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 
 
 The CholeraWatch interactive app enables users to explore cholera outbreaks globally, based on WHO data from 1949 to 2016\. Users can select a country from a list and view key metrics, including total cases, total fatalities, and the case-fatality rate, which are displayed in three info boxes. Additionally, users can customize the time range to analyze trends over specific periods. For each selected country, the app also generates a plot with three graphs, visualizing the same metrics—total cases, total fatalities, and case-fatality rate—over time.
+
+---
 
 **Data Source:** 
 
