@@ -9,15 +9,15 @@ Lakshana Bakthavachalam **(@Lakshana),**  Nada ElSayed Ahmed **(@Nada\_EA)**
 
 ---
 
-* **Phase I**
+## * **Phase I**
 
 **Google Doc:** [https://docs.google.com/document/d/1V0sQZQAMyaK9svz\_VcVEsrdnY6KWJLA7qIHcCffQY0A/edit\#heading=h.6o1oyespi2s2](https://docs.google.com/document/d/1V0sQZQAMyaK9svz_VcVEsrdnY6KWJLA7qIHcCffQY0A/edit#heading=h.6o1oyespi2s2)
 
 ---
 
-* **Phase II**
+## * **Phase II**
 
-**Global Cholera Outbreaks (1949 \- 2016\)**
+## **Global Cholera Outbreaks (1949 \- 2016\)**
 
 The “Cholera outbreak” data was obtained from the Global Health Observatory (GHO), a data repository of WHO, which provides information about the health-related statistics for its 194 member countries. The data was pre-processed and visualized using R, based on three key parameters: number of cases, number of deaths, and case fatality rate.
 
@@ -27,6 +27,8 @@ The “Cholera outbreak” data was obtained from the Global Health Observatory 
 
 **Fig1: HOTSPOTS OF CHOLERA OUTBREAK**
 
+---
+
 Between 1949 and 2016, India had the largest cholera outbreaks, followed by Peru and Democratic Republic of Congo. Other countries like Afghanistan, Bangladesh,  Malawi, Madagascar, Somalia, Tanzania, also experienced an outbreak but it was not alarming (in terms of scale) when compared to India and Peru. Among the listed countries, Bangladesh and DRC are classified as endemic regions.
 
 
@@ -35,8 +37,9 @@ Between 1949 and 2016, India had the largest cholera outbreaks, followed by Peru
 
 **Fig2: TOP 20 COUNTRIES MOST AFFECTED BY CHOLERA**
 
-The bar graphs highlight the top 20 countries that were most affected by cholera. Despite the alarming case numbers, the fatality rate is found to be under control. For instance, the number of cases exceeds over 1 million in India; however, the fatality is less than 50% of the case total. A similar pattern is also observed in Bangladesh.
+The bar graph highlights the top 20 countries that were most affected by cholera. Despite the alarming case numbers, the fatality rate is found to be under control. For instance, the number of cases exceeds over 1 million in India; however, the fatality is less than 50% of the case total. A similar pattern is also observed in Bangladesh.
 
+---
 
 ![Cases_years](https://github.com/user-attachments/assets/9e41ea76-f10a-4080-92fd-a211602f2e07)
 
@@ -56,6 +59,7 @@ In 1949, approximately 0.2 million cases of cholera were reported worldwide. Thi
 ### 
 
 ### 
+---
 
 ![Case_Fatality_years](https://github.com/user-attachments/assets/494df654-e307-426c-8456-c20e71b7ade4)
 
@@ -66,9 +70,9 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 
 ---
 
-### **Cholera Outbreak Report Template**
+# **Cholera Outbreak Report Template**
 
-### **\[Country name\] (Year range)**
+## **\[Country name\] (Year range)**
 
 ### **Key Metrics**
 
@@ -105,17 +109,17 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 
 ---
 
-**Example: Nigeria (1970 \- 2016\)**
+# **Example: Nigeria (1970 \- 2016\)**
 
-**Key Metrics**
+## **Key Metrics**
 
-**Total Cases:** 310217
+### **Total Cases:** 310217
 
-**Total Fatalities:** 21479
+### **Total Fatalities:** 21479
 
-**Average Case-Fatality Rate:** 6.92%
+### **Average Case-Fatality Rate:** 6.92%
 
-### **Summary:**
+## **Summary:**
 
 1\. Number of Cases:
 
@@ -137,16 +141,16 @@ From 1949 to 1960, the average case fatality rate was quite high. However, after
 * Lowest Case-fatality Rate in Nigeria: 0 in the year 1985
 
 
-### **Cholera Outbreak Graph:** 
+## **Cholera Outbreak Graph:** 
 
 ![Nigeria](https://github.com/user-attachments/assets/4d27e545-081b-4769-a569-037283d8bafb)
 
 ---
 
 
-**Shiny App: CholeraWatch**
+# **Shiny App: CholeraWatch**
 
-**Link to app: [https://jpjxx1-nada-ahmed.shinyapps.io/cholerawatch/](https://jpjxx1-nada-ahmed.shinyapps.io/cholerawatch/)**
+## **Link to app: [https://jpjxx1-nada-ahmed.shinyapps.io/cholerawatch/](https://jpjxx1-nada-ahmed.shinyapps.io/cholerawatch/)**
 
 ![Nigera_CholeraWatch](https://github.com/user-attachments/assets/bb469d89-6b61-44f6-9149-c810a06e3d72)
 
@@ -155,7 +159,7 @@ The CholeraWatch interactive app enables users to explore cholera outbreaks glob
 
 ---
 
-**Data Source:** 
+## **Data Source:** 
 
 World Health Organization Global Health Observatory data repository: Cholera  
 [https://apps.who.int/gho/data/node.main.174?lang=en](https://apps.who.int/gho/data/node.main.174?lang=en)  
