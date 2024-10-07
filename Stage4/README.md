@@ -116,7 +116,7 @@ You can setup your system for the pipeline by using the "[setup.sh](https://gith
 
 ---
 ## 5. Running the NGS Pipeline:
-You can run the pipeline file "[script.sh](https://github.com/Nada-EA/HackBio2024-AMR/blob/main/Stage4/Automated%20Pipeline/1-script.sh)" to automatically work through all the samples. 
+You can run the NGS analysis pipeline file "[script.sh](https://github.com/Nada-EA/HackBio2024-AMR/blob/main/Stage4/Automated%20Pipeline/1-script.sh)" to automatically work through all the samples. 
 
   `bash script.sh`
 
