@@ -110,7 +110,7 @@ You can find a list of the used tools in the "requirements.txt" file.
 
 ---
 ## 4. System Setup for the Pipeline:
-You can setup your system for the pipeline by using the "setup.sh" file, which will automatically download the required tools to your terminal.
+You can setup your system for the pipeline by using the "[setup.sh](https://github.com/Nada-EA/HackBio2024-AMR/blob/main/Stage4/Automated%20Pipeline/2-setup.sh)" file, which will automatically download the required tools to your terminal.
 
   `bash setup.sh`
 
