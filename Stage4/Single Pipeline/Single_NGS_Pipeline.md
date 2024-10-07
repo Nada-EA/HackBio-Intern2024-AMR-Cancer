@@ -1,5 +1,8 @@
 <div align="center">
 
+![image](https://github.com/user-attachments/assets/aa8c0e18-f0a4-4b38-b04f-6eaca1b9f004)
+
+
    # **NGS Analysis Pipeline** 
    ## **(Sample: ERR8774458)**
    
