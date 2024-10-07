@@ -1,0 +1,254 @@
+---
+title: "R Notebook"
+output:
+  html_notebook: default
+  pdf_document: default
+---
+#Install missing packages
+```{r}
+install.packages("rworldmap")
+install.packages("shinyWidgets")
+```
+
+#Load libraries
+```{r}
+library(tidyverse)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(rworldmap)
+```
+#Load data
+```{r}
+cases <- read.csv('Cases_Cholera.csv')
+deaths <- read.csv('Fatality_Cholera.csv')
+fatality <- read.csv('Case-Fatality_Cholera.csv')
+```
+#Review data (structure, summary, NA
+```{r}
+#Data structure
+str(cases)
+str(deaths) #number of deaths needs to be changed from character to numeric
+str(fatality) #case-fatality rate needs to be changed from character to numeric
+#Data summary
+summary(cases)
+summary(deaths)
+summary(fatality) #The three datasets (1949-2016)
+                  #There is discrepancy in the number of entries (check for NA & empty cells)
+#Check for unique values
+unique_cases <- lapply(cases, unique) #161 countries, 68 years (1949-2016)
+unique_deaths <- lapply(deaths, unique) #161 countries, 68 years (1949-2016)
+unique_fatality <- lapply(fatality, unique) #160 countries (one missing), 68 years (1949-2016)
+#Check for NA/missing values
+sum(is.na(cases)) #None in cases
+sum(is.na(deaths)) #2 NA in deaths
+sum(is.na(fatality)) #None in fatality
+```
+#Data processing
+```{r}
+#Change column names (very long names)
+cases <- cases %>%
+  rename(Country = Countries..territories.and.areas, Number_cases =
+           Number.of.reported.cases.of.cholera)
+
+deaths <- deaths %>%
+  rename(Country = Countries..territories.and.areas, Number_deaths =
+           Number.of.reported.deaths.from.cholera)
+
+fatality <- fatality %>%
+  rename(Country = Countries..territories.and.areas, Case_fatality =
+           Cholera.case.fatality.rate)
+
+#Change no. of deaths & fatality rates to numeric
+deaths$Number_deaths <- as.numeric(deaths$Number_deaths)
+fatality$Case_fatality <- as.numeric(fatality$Case_fatality)
+
+#Warning NAs introduced, so check for them
+colSums(is.na(deaths)) #2 NAs in Number of deaths column
+colSums(is.na(fatality)) #2 NAs in case-fatality column
+
+#Check which cells are NA
+subset(deaths, is.na(deaths$Number_deaths)) #Germany2016 & Iraq2016
+subset(fatality, is.na(fatality$Case_fatality)) #Germany2016 & Iraq2016
+#Check cases for these two countries in 2016 and deaths in other years
+subset(cases, Country == 'Germany' | Country == 'Iraq')
+subset(deaths, Country == 'Germany' | Country == 'Iraq') #Only one case in Germany2016 & v.low fatalities in other years... #No record for cases in Iraq2016 (convert NAs to 0)
+
+#Replace NA in deaths and fatalities by "0"
+deaths$Number_deaths[is.na(deaths$Number_deaths)] <- 0
+fatality$Case_fatality[is.na(fatality$Case_fatality)] <- 0
+
+#Recheck for NAs
+sum(is.na(cases))
+sum(is.na(deaths)) 
+sum(is.na(fatality)) #Now, none is NA
+```
+#Merge the 3 files into one dataset
+```{r}
+joined_cholera <- cases %>%
+  left_join(deaths, by = c("Country" = "Country", "Year" = "Year")) %>%
+  left_join(fatality, by = c("Country" = "Country", "Year" = "Year"))
+
+#Check for NAs after Join
+colSums(is.na(joined_cholera))
+
+#Check which cells are NA
+subset(joined_cholera, is.na(joined_cholera$Number_deaths)) 
+subset(joined_cholera, is.na(joined_cholera$Case_fatality)) #Some of the missing fatality entries are for outbreaks with large number of cases (so we need to be cautious when interpreting the results!)
+#Converting NAs to Zero
+joined_cholera$Number_deaths[is.na(joined_cholera$Number_deaths)] <- 0
+joined_cholera$Case_fatality[is.na(joined_cholera$Case_fatality)] <- 0
+#ReCheck for NAs
+colSums(is.na(joined_cholera)) #Now, no NAs
+```
+#Data visualization by year
+```{r}
+#Total outbreak metrics by year
+yearly_summary <- joined_cholera %>%
+  group_by(Year) %>% summarise(
+    Total_Cases = sum(Number_cases, na.rm = TRUE),
+    Total_Deaths = sum(Number_deaths, na.rm = TRUE),
+    Avg_Fatality_Rate = mean(Case_fatality, na.rm = TRUE))
+
+##Total cases over years
+ggplot(yearly_summary, aes(x = Year, y = Total_Cases)) +
+  geom_line(color = "blue") +
+  labs(title = "Cholera Cases Over Time (1949-2016)", x = "Year", y = "Total Cases") +
+  scale_y_continuous (labels = scales::label_number(big.mark = ",")) + 
+  theme_minimal()
+
+##Total deaths over years
+ggplot(yearly_summary, aes(x = Year, y = Total_Deaths)) +
+  geom_line(color = "red") +
+  labs(title = "Cholera fatalities Over Time (1949-2016)", x = "Year", y = "Total Fatalities") + scale_y_continuous (labels = scales::label_number(big.mark = ",")) + 
+  theme_minimal()
+
+##Total Case-Fatality over years
+ggplot(yearly_summary, aes(x = Year, y = Avg_Fatality_Rate)) +
+  geom_line(color = "purple") +
+  labs(title = "Average Case-Fatality Over years (1949-2016)", x = "Year", y = "Average Case-Fatality Rate")
+```
+#Data visualization by country
+```{r}
+#Total metrics by country
+country_summary <- joined_cholera %>%
+  group_by(Country) %>% summarize(
+    Total_Cases = sum(Number_cases, na.rm = T),
+    Total_Deaths = sum(Number_deaths, na.rm = T),
+    Avg_Fatality_Rate = mean(Case_fatality, na.rm = T)) %>%
+  arrange(desc(Total_Cases))
+
+#1- Bar plot of total cases for top 20 countries
+ggplot(country_summary, aes(x = reorder(Country, -Total_Cases), y = Total_Cases)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Total Cholera Cases by Country", x = "Country", y = "Total Cases")
+#So many countries, the graph is crowded, so only plot the top 20
+
+##Filter top 20 countries by total cases
+top_20_countries <- country_summary %>%
+  top_n(20, Total_Cases) %>%      # Get the top 20 countries
+  arrange(desc(Total_Cases))      # Arrange by total cases in descending order
+
+##Plot the data of the top 20
+ggplot(top_20_countries, aes(x = reorder(Country, -Total_Cases), y = Total_Cases)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +                   # Flip coordinates for better readability
+  labs(title = "Top 20 Countries by Cholera Cases",
+       x = "Country", y = "Total Cases") +
+  scale_y_continuous (labels = scales::label_number(big.mark = ",")) + 
+  theme_minimal()  #This to show full numbers instead of scientific notation "5e+05"
+
+#2- Plot a map to visualize outbreaks geographically
+##Merge our dataset data with the world map data
+world_map <- getMap(resolution = "low")
+
+##Match the country names from our dataset to the map's data
+map_data <- joinCountryData2Map(country_summary,
+                                   joinCode = "NAME",   #country names in world map
+                                   nameJoinColumn = "Country")  #country names in our data
+
+##Plot the map
+mapCountryData(map_data, 
+               nameColumnToPlot = "Total_Cases",   
+               mapTitle = "Cholera Outbreaks by Country (1949 -2016)",
+               colourPalette = "heat",               
+               catMethod = "pretty")
+
+
+#3- Plot top 20 countries (cases, deaths, and fatalities)
+##convert dataframe to long for plotting
+top_20_long <- top_20_countries %>%
+  pivot_longer(cols = c(Total_Cases, Total_Deaths), 
+               names_to = "Metric", 
+               values_to = "Value")
+
+##Bar Plot
+ggplot(top_20_long, aes(x = reorder(Country, -Value), y = Value, fill = Metric)) +
+  geom_bar(stat = "identity", position = "dodge") +  
+  geom_text(aes(label = ifelse(Metric == "Total_Cases", 
+                               paste0(round(Avg_Fatality_Rate, 1), "%"), "")),  
+            position = position_dodge(width = 0.9), 
+            vjust = -0.5, size = 3, color = "black", fontface = "bold") +  # Bold text
+  coord_flip() +  
+  scale_fill_manual(values = c("Total_Cases" = "steelblue", "Total_Deaths" = "darkred"), 
+  labels = c("Total Cases", "Total Fatalities")) +
+  labs(title = "Top 20 Countries by Cholera Cases, Deaths, and Fatality Rates",
+       x = "Country", y = "Total Count", fill = "") +
+  theme_minimal(base_size = 14) +  
+  theme(legend.position = "top") +  
+  scale_y_continuous(labels = scales::label_number(big.mark = ","))
+```
+#Focus on one Country "Nigeria": significant outbreaks, no NAs, and data available over years (1970-2016)
+```{r}
+#Filter Nigeria data alone
+Nigeria <- joined_cholera %>%
+  filter(Country == "Nigeria")
+
+# Step 1: Reshape the data into a long format
+Nigeria_long <- Nigeria %>%
+  select(Year, Number_cases, Number_deaths, Case_fatality) %>%
+  pivot_longer(cols = c(Number_cases, Number_deaths, Case_fatality),
+               names_to = "Metric", values_to = "Value") %>%
+  mutate(Metric = recode(Metric,
+                         "Number_cases" = "Cases",
+                         "Number_deaths" = "Fatalities",
+                         "Case_fatality" = "Case-Fatality Rate"),
+## Reorder Metric levels so that Case-Fatality Rate appears last
+ Metric = factor(Metric, levels = c("Cases", "Fatalities", "Case-Fatality Rate")))
+
+# Step 2: Create a faceted plot
+ggplot(Nigeria_long, aes(x = Year, y = Value, color = Metric)) +
+  geom_line(size = 1) + geom_point(size = 2) +
+  facet_wrap(~ Metric, scales = "free_y", ncol = 1) +
+  labs(title = "Trends in Cholera Cases, Fatalities, and Case-Fatality Rate in Nigeria",
+       x = "Year", y = "Count / Percentage") +
+  
+  scale_color_manual(values = c("Cases" = "steelblue", 
+                                "Fatalities" = "darkred", 
+                                "Case-Fatality Rate" = "darkmagenta")) +
+  theme(legend.position = "none")  # Remove redundant legend
+
+#Summary:
+##Highest & lowest cases
+
+cat("Highest number of cases in Nigeria:", max(Nigeria$Number_cases), "in the year", Nigeria$Year[which.max(Nigeria$Number_cases)])
+
+cat("Lowest number of cases in Nigeria:", min(Nigeria$Number_cases), "in the year", Nigeria$Year[which.min(Nigeria$Number_cases)])
+
+##Highest & lowest fatalities
+
+cat("Highest number of fatalities in Nigeria:", max(Nigeria$Number_deaths), "in the year", Nigeria$Year[which.max(Nigeria$Number_deaths)])
+
+cat("Lowest number of fatalities in Nigeria:", min(Nigeria$Number_deaths), "in the year", Nigeria$Year[which.min(Nigeria$Number_deaths)])
+
+##Highest & lowest CFR
+cat("Highest Case-fatality Rate in Nigeria:", max(Nigeria$Case_fatality), "in the year", Nigeria$Year[which.max(Nigeria$Case_fatality)])
+
+cat("Lowest Case-fatality Rate in Nigeria:", min(Nigeria$Case_fatality), "in the year", Nigeria$Year[which.min(Nigeria$Case_fatality)])
+
+```
+
+
+
+
