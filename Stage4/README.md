@@ -16,7 +16,8 @@
 
 In **task one**, we were required to create a simple NGS analysis pipeline for a single sample.
 This included downloading the datasets (forward and reverse sample reads and reference genome), applying quality control check, trimming adapter content as well as poor-quality bases, aligning sample reads to the reference genome, and variant calling. 
-You can find the step by step process of this analysis in the "Single_NGS_Pipeline.md" file.
+
+- You can find the step by step process of this analysis in the "Single Pipeline/Single_NGS_Pipeline.md" file.
 
 ---
 
