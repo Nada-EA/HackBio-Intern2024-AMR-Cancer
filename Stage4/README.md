@@ -106,7 +106,7 @@ This file lists all the software tools used in the project.
     R2: https://github.com/josoga2/yt-dataset/raw/main/dataset/raw_reads/Drysdale_R2.fastq.gz
 ---
 ## 3. Required Tools:
-You can find a list of the used tools in the "requirements.txt" file.
+You can find a list of the used tools in the "[requirements.txt](https://github.com/Nada-EA/HackBio2024-AMR/blob/main/Stage4/Automated%20Pipeline/3-requirements.txt)" file.
 
 ---
 ## 4. System Setup for the Pipeline:
